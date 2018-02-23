@@ -36,7 +36,6 @@ class ApplicationController < Sinatra::Base
 
 
   get "/login" do
-
     erb :login
   end
 
@@ -60,7 +59,13 @@ class ApplicationController < Sinatra::Base
 
   patch '/balance' do
     user = User.find_by(id: session[:user_id])
-    user.change_balance(params)
+    if !!params[:deposite]
+      amount = params[:deposite].to_i
+      total = user.balance.to_i + amount
+    else
+      amount = params[:withdraw].to_i
+      total = user.balance.to_i - amount
+    end
     user.update(balance: total)
     redirect '/account'
   end
