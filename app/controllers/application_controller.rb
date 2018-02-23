@@ -59,13 +59,7 @@ class ApplicationController < Sinatra::Base
 
   patch '/balance' do
     user = User.find_by(id: session[:user_id])
-    if !!params[:deposite]
-      amount = params[:deposite].to_i
-      total = user.balance.to_i + amount
-    else
-      amount = params[:withdraw].to_i
-      total = user.balance.to_i - amount
-    end
+    user.change_balance(params)
     user.update(balance: total)
     redirect '/account'
   end
